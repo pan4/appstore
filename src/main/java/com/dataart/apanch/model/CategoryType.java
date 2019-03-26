@@ -7,7 +7,7 @@ public enum CategoryType {
 
     String categoryType;
 
-    private CategoryType(String categoryType){
+    CategoryType(String categoryType){
         this.categoryType = categoryType;
     }
 
