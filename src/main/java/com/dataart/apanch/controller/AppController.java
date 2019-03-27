@@ -9,6 +9,8 @@ import com.dataart.apanch.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,15 +38,27 @@ public class AppController {
 
     private static Integer RECORDS_PER_PAGE = 2;
 
+    @RequestMapping(value = {"/"}, method = RequestMethod.GET)
+    public String home(ModelMap model) {
+        list(1, 1, model);
+        return "home";
+    }
+
     @RequestMapping(value = {"/category-{id}"}, method = RequestMethod.GET)
     public String listCategories(@PathVariable int id, @RequestParam("page") int page, ModelMap model) {
+        list(id, page, model);
+        return "home";
+    }
+
+    private void list(int id, int page, ModelMap model) {
         List<Category> categories = categoryService.findAll();
         model.addAttribute("categories", categories);
         model.addAttribute("categoryId", id);
         Page<App> apps = appService.findByCategoryId(id, new PageRequest(page - 1, RECORDS_PER_PAGE));
         model.addAttribute("apps", apps.getContent());
         model.addAttribute("noOfPages", apps.getTotalPages());
-        return "home";
+        model.addAttribute("popular", appService.findPopular());
+        model.addAttribute("loggedinuser", getPrincipal());
     }
 
     @RequestMapping(value = {"/new"}, method = RequestMethod.GET)
@@ -54,6 +68,7 @@ public class AppController {
         List<Category> categories = categoryService.findAll();
         model.addAttribute("categories", categories);
         model.addAttribute("selected", CategoryType.EDUCATION.getCategoryType());
+        model.addAttribute("popular", appService.findPopular());
         return "new";
     }
 
@@ -73,6 +88,7 @@ public class AppController {
     public String getApp(@PathVariable int id, ModelMap model) {
         App app = appService.findById(id);
         model.addAttribute("app", app);
+        model.addAttribute("popular", appService.findPopular());
         return "details";
     }
 
@@ -87,6 +103,39 @@ public class AppController {
         }
     }
 
+    @RequestMapping(value = "/Access_Denied", method = RequestMethod.GET)
+    public String accessDeniedPage(ModelMap model) {
+        model.addAttribute("loggedinuser", getPrincipal());
+        return "accessDenied";
+    }
+
+    private String getPrincipal(){
+        String userName = null;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof UserDetails) {
+            userName = ((UserDetails)principal).getUsername();
+        } else {
+            userName = principal.toString();
+        }
+        return userName;
+    }
+
+//    @RequestMapping(value = "/login", method = RequestMethod.GET)
+//    public String loginPage() {
+//        if (isCurrentAuthenticationAnonymous()) {
+//            return "login";
+//        } else {
+//            return "redirect:/category-1?page=1";
+//        }
+//    }
+//
+//    private boolean isCurrentAuthenticationAnonymous() {
+//        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        return authenticationTrustResolver.isAnonymous(authentication);
+//    }
+//
+//
 //    @RequestMapping(value = {"/app-{id}"}, method = RequestMethod.GET)
 //    public String getApp(@PathVariable Integer id, ModelMap model) {
 //        List<Category> categories = categoryService.findAll();

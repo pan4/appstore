@@ -8,8 +8,7 @@
 </head>
 
 <body>
-    <a href="category-1?page=1">home</a>
-    <a href="new">new</a>
+    <%@include file="header.jsp" %>
     <br/>
     <br/>
     <table border="1" cellpadding="5" cellspacing="5">

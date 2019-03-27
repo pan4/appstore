@@ -9,8 +9,7 @@
 </head>
 
 <body>
-    <a href="category-1?page=1">home</a>
-    <a href="new">new</a>
+    <%@include file="header.jsp" %>
     <h2>New application</h2>
     <form:form method="POST" modelAttribute="app" class="form-horizontal" enctype="multipart/form-data">
         <form:input type="text" path="name" id="name" size="30" placeholder="Application name" />
@@ -26,6 +25,6 @@
         <%--</select>--%>
         <p><input type="file" name="file" /></p>
         <input type="submit" value="Save" />
-        <a href="category-1"> Cancel </a>
+        <a href="category-1?page=1"> Cancel </a>
     </form:form>
 </body>

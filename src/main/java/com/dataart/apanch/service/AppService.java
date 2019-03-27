@@ -6,7 +6,9 @@ import com.dataart.apanch.repository.AppPackageRepository;
 import com.dataart.apanch.repository.AppRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,6 +17,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.zip.ZipEntry;
@@ -34,6 +37,11 @@ public class AppService {
 
     public App findById(Integer id){
         return appRepository.findById(id);
+    }
+
+    public List<App> findPopular(){
+        Page<App> page = appRepository.findAll(new PageRequest(0, 5, new Sort(Sort.Direction.DESC, "downloadsCount")));
+        return page.getContent();
     }
 
 

@@ -10,9 +10,9 @@
 	<name>appstore</name>
 
   	<properties>
-		<springframework.version>4.2.5.RELEASE</springframework.version>
-		<springsecurity.version>4.0.4.RELEASE</springsecurity.version>
-		<hibernate.version>4.3.11.Final</hibernate.version>
+		<springframework.version>5.1.5.RELEASE</springframework.version>
+		<springsecurity.version>5.0.0.RELEASE</springsecurity.version>
+		<hibernate.version>5.2.12.Final</hibernate.version>
 		<mysql.connector.version>8.0.15</mysql.connector.version>
 	</properties>
 
@@ -74,10 +74,21 @@
 			<artifactId>hibernate-core</artifactId>
 			<version>${hibernate.version}</version>
 		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.hibernate</groupId>-->
+			<!--<artifactId>hibernate-entitymanager</artifactId>-->
+			<!--<version>${hibernate.version}</version>-->
+		<!--</dependency>-->
 		<dependency>
 			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
+			<artifactId>hibernate-c3p0</artifactId>
 			<version>${hibernate.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.mchange</groupId>
+			<artifactId>c3p0</artifactId>
+			<version>0.9.5.2</version>
 		</dependency>
 
 		<!-- jsr303 validation -->
