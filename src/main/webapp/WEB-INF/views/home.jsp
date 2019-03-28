@@ -17,7 +17,7 @@
         </tr>
         <c:forEach var="category" items="${categories}">
             <tr>
-                <td><a href="category-${category.id}?page=1">${category.type}</a></td>
+                <td><a href="category-${category.type.toLowerCase()}">${category.type}</a></td>
             </tr>
         </c:forEach>
     </table>
@@ -52,7 +52,7 @@
                             <td>${i}</td>
                         </c:when>
                         <c:otherwise>
-                            <td><a href="category-${categoryId}?page=${i}">${i}</a></td>
+                            <td><a href="category-${categoryType}?page=${i-1}">${i}</a></td>
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>

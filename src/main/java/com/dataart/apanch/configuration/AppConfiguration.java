@@ -1,6 +1,7 @@
 package com.dataart.apanch.configuration;
 
 import com.dataart.apanch.converter.CategoryIdToCategoryConverter;
+import com.dataart.apanch.converter.CategoryTypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +28,9 @@ public class AppConfiguration extends WebMvcConfigurerAdapter{
 
     @Autowired
     CategoryIdToCategoryConverter categoryIdToCategoryConverter;
+
+    @Autowired
+    CategoryTypeConverter categoryTypeConverter;
 
 
     /**
@@ -57,6 +61,7 @@ public class AppConfiguration extends WebMvcConfigurerAdapter{
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(categoryIdToCategoryConverter);
+        registry.addConverter(categoryTypeConverter);
     }
 
 

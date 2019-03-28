@@ -1,10 +1,13 @@
 package com.dataart.apanch.service;
 
+import com.dataart.apanch.caching.CachingConfig;
 import com.dataart.apanch.model.App;
 import com.dataart.apanch.model.AppPackage;
+import com.dataart.apanch.model.CategoryType;
 import com.dataart.apanch.repository.AppPackageRepository;
 import com.dataart.apanch.repository.AppRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,33 +34,19 @@ public class AppService {
     @Autowired
     AppPackageRepository appPackageRepository;
 
-    public Page<App> findByCategoryId(Integer id, Pageable pageable){
-        return appRepository.findByCategoryId(id, pageable);
+    public Page<App> findByCategoryType(CategoryType type, Pageable pageable){
+        return appRepository.findByCategoryType(type.name(), pageable);
     }
 
     public App findById(Integer id){
         return appRepository.findById(id);
     }
 
+    @Cacheable(value = CachingConfig.POPULAR)
     public List<App> findPopular(){
         Page<App> page = appRepository.findAll(new PageRequest(0, 5, new Sort(Sort.Direction.DESC, "downloadsCount")));
         return page.getContent();
     }
-
-
-//    @Transactional
-//    public App save(App app){
-//        app.setDownloadsCount(0);
-//        return appRepository.save(app);
-//    }
-//
-//    @Transactional
-//    public void saveAppWithPackage(App app, AppPackage appPackage){
-//        app.setDownloadsCount(0);
-//        App savedApp = appRepository.save(app);
-//        appPackage.setApp(savedApp);
-//        appPackageRepository.save(appPackage);
-//    }
 
     @Transactional
     public void save(MultipartFile file, App app) throws IOException {

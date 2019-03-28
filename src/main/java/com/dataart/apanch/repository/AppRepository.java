@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface AppRepository extends PagingAndSortingRepository<App, Integer> {
 
-    Page<App> findByCategoryId(Integer id, Pageable pageable);
+    Page<App> findByCategoryType(String type, Pageable pageable);
 
     @Query("SELECT a FROM App a JOIN FETCH a.bigIcon WHERE a.id = (:id)")
     App findById(@Param("id") Integer id);

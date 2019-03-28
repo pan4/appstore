@@ -2,7 +2,18 @@ package com.dataart.apanch.model;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 
 @Entity
 @Table(name="APP")
@@ -26,8 +37,6 @@ public class App {
     @Column(name="DOWNLOADS_COUNT", nullable=false)
     private Integer downloadsCount;
 
-//    @OneToOne(mappedBy = "app", fetch = FetchType.LAZY)
-
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id", referencedColumnName = "id")
     private AppPackage appPackage;
@@ -40,7 +49,6 @@ public class App {
     @JoinColumn(name = "package_id", referencedColumnName = "id", insertable = false, updatable = false)
     private BigIcon bigIcon;
 
-    @NotEmpty
     @Column(name="PACKAGE_NAME", nullable=false)
     private String packageName;
 

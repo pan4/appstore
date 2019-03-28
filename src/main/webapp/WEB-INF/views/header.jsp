@@ -1,6 +1,6 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 
-<a href="category-1?page=1">home</a>
+<a href="home">home</a>
 <sec:authorize access="hasRole('DEVELOPER')">
     <a href="new">new</a>
 </sec:authorize>

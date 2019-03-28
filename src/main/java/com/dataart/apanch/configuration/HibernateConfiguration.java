@@ -1,7 +1,5 @@
 package com.dataart.apanch.configuration;
 
-import com.dataart.apanch.model.Authorities;
-import com.dataart.apanch.model.User;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -47,7 +45,6 @@ public class HibernateConfiguration {
         lcemfb.setPersistenceProviderClass(HibernatePersistenceProvider.class);
         lcemfb.setJpaVendorAdapter(getJpaVendorAdapter());
         lcemfb.setDataSource(dataSource());
-//        lcemfb.setPersistenceUnitName("myJpaPersistenceUnit");
         lcemfb.setPackagesToScan("com.dataart.apanch.model");
         lcemfb.setJpaProperties(hibernateProperties());
         return lcemfb;
@@ -58,16 +55,6 @@ public class HibernateConfiguration {
         JpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
         return adapter;
     }
-
-//    @Bean
-//    public DataSource dataSource() {
-//        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-//        dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
-//        dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
-//        dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
-//        dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
-//        return dataSource;
-//    }
 
     @Bean
     public DataSource dataSource() {
@@ -86,14 +73,6 @@ public class HibernateConfiguration {
         properties.put("hibernate.format_sql", environment.getRequiredProperty("hibernate.format_sql"));
         return properties;
     }
-
-//    @Bean
-//    @Autowired
-//    public HibernateTransactionManager transactionManager(SessionFactory s) {
-//        HibernateTransactionManager txManager = new HibernateTransactionManager();
-//        txManager.setSessionFactory(s);
-//        return txManager;
-//    }
 
     @Bean(name="transactionManager")
     public PlatformTransactionManager transactionManager(){
