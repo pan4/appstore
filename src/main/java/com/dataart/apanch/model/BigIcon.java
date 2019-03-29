@@ -29,6 +29,9 @@ public class BigIcon {
     }
 
     public String getIcon() {
+        if(icon == null){
+            return null;
+        }
         byte[] encodeBase64 = Base64.getEncoder().encode(icon);
         return new String(encodeBase64);
     }

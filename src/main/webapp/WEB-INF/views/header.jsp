@@ -11,9 +11,14 @@
 <tr>
     <c:forEach var="app" items="${popular}">
         <td>
-            <c:if test="${not empty app.smallIcon}">
-                <a href="app-${app.id}"><img alt="img" src="data:image/jpeg;base64,${app.smallIcon.icon}"/></a>
-            </c:if>
+            <c:choose>
+                <c:when test="${not empty app.smallIcon.icon}">
+                    <a href="app-${app.id}"><img alt="img" src="data:image/jpeg;base64,${app.smallIcon.icon}"/></a>
+                </c:when>
+                <c:otherwise>
+                    <a href="app-${app.id}"><img alt="img" src="data:image/jpeg;base64,${defaultIcons.smallIcon}"/></a>
+                </c:otherwise>
+            </c:choose>
         </td>
     </c:forEach>
 </tr>

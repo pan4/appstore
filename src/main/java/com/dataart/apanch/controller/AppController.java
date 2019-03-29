@@ -5,6 +5,7 @@ import com.dataart.apanch.model.CategoryType;
 import com.dataart.apanch.service.AppPackageService;
 import com.dataart.apanch.service.AppService;
 import com.dataart.apanch.service.CategoryService;
+import com.dataart.apanch.service.DefaultIconsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -43,6 +44,9 @@ public class AppController {
     @Autowired
     MessageSource messageSource;
 
+    @Autowired
+    DefaultIconsService defaultIconsService;
+
     @RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
     public String home() {
         return "redirect:/category-games";
@@ -50,45 +54,62 @@ public class AppController {
 
     @RequestMapping(value = {"/category-{type}"}, method = RequestMethod.GET)
     public String listCategories(@PathVariable CategoryType type, ModelMap model, @RequestParam(value = "orderBy", defaultValue = "downloadsCount") String orderBy,
-                                 @RequestParam(value = "direction", defaultValue = "desc") String direction, @RequestParam(value = "page", defaultValue = "0") int page,
+                                 @RequestParam(value = "direction", defaultValue = "desc") String direction, @RequestParam(value = "page", defaultValue = "1") int page,
                                  @RequestParam(value = "size", defaultValue = "2") int size) {
         model.addAttribute("categories", categoryService.findAll());
-        model.addAttribute("categoryType", type.name());
-        Page<App> apps = appService.findByCategoryType(type, new PageRequest(page, size, new Sort(Sort.Direction.fromString(direction), orderBy)));
+        model.addAttribute("categoryType", type.name().toLowerCase());
+        Page<App> apps = appService.findByCategoryType(type, new PageRequest(page - 1, size, new Sort(Sort.Direction.fromString(direction), orderBy)));
         model.addAttribute("apps", apps.getContent());
         model.addAttribute("noOfPages", apps.getTotalPages());
         model.addAttribute("popular", appService.findPopular());
         model.addAttribute("loggedinuser", getPrincipal());
+        model.addAttribute("defaultIcons", defaultIconsService.get());
         return "home";
     }
 
     @RequestMapping(value = {"/new"}, method = RequestMethod.GET)
     public String newApp(ModelMap model) {
         model.addAttribute("app", new App());
-        model.addAttribute("categories", categoryService.findAll());
-        model.addAttribute("popular", appService.findPopular());
+        fillModel(model);
         return "new";
     }
 
     @RequestMapping(value = {"/new"}, method = RequestMethod.POST)
     public String saveApp(MultipartFile file, @Valid App app, BindingResult result, ModelMap model) throws IOException {
         if (result.hasErrors() || file.getSize() == 0) {
-            model.addAttribute("categories", categoryService.findAll());
-            model.addAttribute("popular", appService.findPopular());
+            fillModel(model);
             if (file.getSize() == 0) {
                 FieldError error = new FieldError("app", "appPackage", messageSource.getMessage("NotEmpty.app.appPackage", null, Locale.getDefault()));
                 result.addError(error);
             }
             return "new";
         }
-        appService.save(file, app);
+        if (!appService.isAppUnique(app)) {
+            fillModel(model);
+            FieldError ssoError = new FieldError("app", "name", messageSource.getMessage("Non.unique.app", new String[]{app.getName(), app.getCategory().getType()}, Locale.getDefault()));
+            result.addError(ssoError);
+            return "new";
+        }
+        appService.save(file, app, result);
+        if (result.hasErrors()) {
+            fillModel(model);
+            return "new";
+        }
         return "redirect:/category-games";
+    }
+
+    private void fillModel(ModelMap model) {
+        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("popular", appService.findPopular());
+        model.addAttribute("loggedinuser", getPrincipal());
+        model.addAttribute("defaultIcons", defaultIconsService.get());
     }
 
     @RequestMapping(value = {"/app-{id}"}, method = RequestMethod.GET)
     public String getApp(@PathVariable int id, ModelMap model) {
         model.addAttribute("app", appService.findById(id));
         model.addAttribute("popular", appService.findPopular());
+        model.addAttribute("defaultIcons", defaultIconsService.get());
         return "details";
     }
 

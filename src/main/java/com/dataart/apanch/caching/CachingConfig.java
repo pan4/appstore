@@ -21,12 +21,13 @@ public class CachingConfig {
 
     public static final String POPULAR = "POPULAR";
     public static final String CATEGORIES = "CATEGORIES";
+    public static final String DEFAULT_ICONS = "DEFAULT_ICONS";
 
     static final Logger logger = LoggerFactory.getLogger(CachingConfig.class);
 
     @Bean
     public CacheManager cacheManager() {
-        return new ConcurrentMapCacheManager(POPULAR, CATEGORIES);
+        return new ConcurrentMapCacheManager(POPULAR, CATEGORIES, DEFAULT_ICONS);
     }
 
     @CacheEvict(allEntries = true, value = {POPULAR})

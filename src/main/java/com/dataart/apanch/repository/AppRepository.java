@@ -13,4 +13,6 @@ public interface AppRepository extends PagingAndSortingRepository<App, Integer> 
 
     @Query("SELECT a FROM App a JOIN FETCH a.bigIcon WHERE a.id = (:id)")
     App findById(@Param("id") Integer id);
+
+    App findByNameAndCategoryType(String name, String type);
 }

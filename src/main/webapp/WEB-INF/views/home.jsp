@@ -31,9 +31,14 @@
             <c:forEach var="app" items="${apps}">
                 <tr>
                     <td>
-                        <c:if test="${not empty app.smallIcon}">
-                            <img alt="img" src="data:image/jpeg;base64,${app.smallIcon.icon}"/>
-                        </c:if>
+                        <c:choose>
+                            <c:when test="${not empty app.smallIcon.icon}">
+                                <img alt="img" src="data:image/jpeg;base64,${app.smallIcon.icon}"/>
+                            </c:when>
+                            <c:otherwise>
+                                <img alt="img" src="data:image/jpeg;base64,${defaultIcons.smallIcon}"/>
+                            </c:otherwise>
+                        </c:choose>
                     </td>
                     <td>
                         <a href="app-${app.id}">${app.name}</a>
@@ -52,7 +57,7 @@
                             <td>${i}</td>
                         </c:when>
                         <c:otherwise>
-                            <td><a href="category-${categoryType}?page=${i-1}">${i}</a></td>
+                            <td><a href="category-${categoryType}?page=${i}">${i}</a></td>
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>

@@ -9,9 +9,9 @@ public class CategoryTypeConverter implements Converter<String, CategoryType> {
     @Override
     public CategoryType convert(String source) {
         try {
-            return CategoryType.valueOf(source);
+            return CategoryType.valueOf(source.toUpperCase());
         } catch(Exception e) {
-            return CategoryType.GAMES;
+            throw new RuntimeException(e);
         }
     }
 }

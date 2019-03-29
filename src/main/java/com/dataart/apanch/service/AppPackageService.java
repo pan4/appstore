@@ -35,8 +35,12 @@ public class AppPackageService {
             ZipOutputStream zipOut = new ZipOutputStream(servletOutputStream);
             Map<String, byte[]> map = new HashMap<>();
             map.put(appPackage.getFileName(), appPackage.getFile());
-            map.put(appPackage.getSmallIconName(), appPackage.getSmallIcon());
-            map.put(appPackage.getBigIconName(), appPackage.getBigIcon());
+            if(appPackage.getSmallIconName() != null){
+                map.put(appPackage.getSmallIconName(), appPackage.getSmallIcon());
+            }
+            if(appPackage.getBigIconName() != null){
+                map.put(appPackage.getBigIconName(), appPackage.getBigIcon());
+            }
             for (String key : map.keySet()) {
                 InputStream is = new ByteArrayInputStream(map.get(key));
                 ZipEntry zipEntry = new ZipEntry(key);

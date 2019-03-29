@@ -13,9 +13,14 @@
     <h2>${app.name}</h2>
     <tr>
         <td>
-            <c:if test="${not empty app.bigIcon}">
-                <img alt="img" src="data:image/jpeg;base64,${app.bigIcon.icon}"/>
-            </c:if>
+            <c:choose>
+                <c:when test="${not empty app.bigIcon.icon}">
+                    <img alt="img" src="data:image/jpeg;base64,${app.bigIcon.icon}"/>
+                </c:when>
+                <c:otherwise>
+                    <img alt="img" src="data:image/jpeg;base64,${defaultIcons.bigIcon}"/>
+                </c:otherwise>
+            </c:choose>
         </td>
         <td>${app.description}</td>
     </tr>
