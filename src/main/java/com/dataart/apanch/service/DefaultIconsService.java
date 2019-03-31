@@ -14,6 +14,9 @@ public class DefaultIconsService {
 
     @Cacheable(value = CachingConfig.DEFAULT_ICONS)
     public DefaultIcons get(){
-        return defaultIconsRepository.findAll().iterator().next();
+        if(defaultIconsRepository.findAll().iterator().hasNext()){
+            return defaultIconsRepository.findAll().iterator().next();
+        }
+        return null;
     }
 }
