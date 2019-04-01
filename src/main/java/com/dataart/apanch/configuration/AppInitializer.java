@@ -10,6 +10,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
 public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+    private static final String TMP_FOLDER = "/tmp";
+    private static final int MAX_UPLOAD_SIZE = 5 * 1024 * 1024;
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
@@ -25,9 +27,6 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
     protected String[] getServletMappings() {
         return new String[] { "/" };
     }
-
-    private String TMP_FOLDER = "/tmp";
-    private int MAX_UPLOAD_SIZE = 5 * 1024 * 1024;
 
     @Override
     public void onStartup(ServletContext sc) throws ServletException {

@@ -1,7 +1,7 @@
 package com.dataart.apanch.service;
 
 import com.dataart.apanch.model.User;
-import com.dataart.apanch.repository.UserDetailsDao;
+import com.dataart.apanch.repository.UserDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,17 +11,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-@Service("userDetailsService")
+@Service()
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private UserDetailsDao userDetailsDao;
+    UserDetailsRepository userDetailsRepository;
 
     @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        User user = userDetailsDao.findUserByUsername(username);
+        User user = userDetailsRepository.findByUsername(username);
         UserBuilder builder = null;
         if (user != null) {
 

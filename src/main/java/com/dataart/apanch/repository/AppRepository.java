@@ -7,12 +7,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface AppRepository extends PagingAndSortingRepository<App, Integer> {
 
     Page<App> findByCategoryType(String type, Pageable pageable);
 
     @Query("SELECT a FROM App a JOIN FETCH a.bigIcon WHERE a.id = (:id)")
-    App findById(@Param("id") Integer id);
+    Optional<App> findById(@Param("id") Integer id);
 
     App findByNameAndCategoryType(String name, String type);
 }

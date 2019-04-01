@@ -7,7 +7,7 @@ public enum FileElements {
     SMALL_ICON_NAME("picture_64"),
     BIG_ICON_NAME("picture_256");
 
-    final String title;
+    private final String title;
 
     FileElements(String title){
         this.title = title;

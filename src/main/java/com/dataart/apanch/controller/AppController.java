@@ -58,7 +58,7 @@ public class AppController {
                                  @RequestParam(value = "size", defaultValue = "2") int size) {
         model.addAttribute("categories", categoryService.findAll());
         model.addAttribute("categoryType", type.name().toLowerCase());
-        Page<App> apps = appService.findByCategoryType(type, new PageRequest(page - 1, size, new Sort(Sort.Direction.fromString(direction), orderBy)));
+        Page<App> apps = appService.findByCategoryType(type, PageRequest.of(page - 1, size, Sort.by(Sort.Direction.fromString(direction), orderBy)));
         model.addAttribute("apps", apps.getContent());
         model.addAttribute("noOfPages", apps.getTotalPages());
         model.addAttribute("popular", appService.findPopular());
@@ -90,7 +90,7 @@ public class AppController {
             result.addError(ssoError);
             return "new";
         }
-        appService.save(file, app, result);
+        appService.trySave(file, app, result);
         if (result.hasErrors()) {
             fillModel(model);
             return "new";
@@ -130,7 +130,7 @@ public class AppController {
         return "accessDenied";
     }
 
-    private String getPrincipal() {
+    private static String getPrincipal() {
         String userName = null;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

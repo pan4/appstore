@@ -93,7 +93,7 @@ public class App {
     }
 
     public void increaseDownloadsCount() {
-        this.downloadsCount++;
+        downloadsCount++;
     }
 
     public AppPackage getAppPackage() {

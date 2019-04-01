@@ -11,14 +11,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class CategoryIdToCategoryConverter implements Converter<Object, Category> {
 
-    static final Logger logger = LoggerFactory.getLogger(CategoryIdToCategoryConverter.class);
+    static final private Logger logger = LoggerFactory.getLogger(CategoryIdToCategoryConverter.class);
 
     @Autowired
     CategoryService categoryService;
 
     public Category convert(Object element) {
         Integer id = Integer.parseInt((String) element);
-        Category category = categoryService.findOne(id);
+        Category category = categoryService.findById(id);
         logger.info("Profile : {}", category);
         return category;
     }

@@ -8,8 +8,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -23,23 +24,14 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories("com.dataart.apanch.repository")
-@ComponentScan({ "com.dataart.apanch.configuration" })
-@PropertySource(value = { "classpath:application.properties" })
+@ComponentScan({"com.dataart.apanch.configuration"})
+@PropertySource(value = {"classpath:application.properties"})
 public class HibernateConfiguration {
 
     @Autowired
     private Environment environment;
 
-    @Bean
-    public LocalSessionFactoryBean sessionFactory() {
-        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-        sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan(new String[] { "com.dataart.apanch.model" });
-        sessionFactory.setHibernateProperties(hibernateProperties());
-        return sessionFactory;
-    }
-
-    @Bean(name="entityManagerFactory")
+    @Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean getEntityManagerFactoryBean() {
         LocalContainerEntityManagerFactoryBean lcemfb = new LocalContainerEntityManagerFactoryBean();
         lcemfb.setPersistenceProviderClass(HibernatePersistenceProvider.class);
@@ -52,18 +44,17 @@ public class HibernateConfiguration {
 
     @Bean
     public JpaVendorAdapter getJpaVendorAdapter() {
-        JpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
-        return adapter;
+        return new HibernateJpaVendorAdapter();
     }
 
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
-        dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
-        dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
-        dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
-        return dataSource;
+        EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
+        return builder
+                .setType(EmbeddedDatabaseType.H2)
+                .addScript("create.sql")
+                .addScript("populate.sql")
+                .build();
     }
 
     private Properties hibernateProperties() {
@@ -74,11 +65,10 @@ public class HibernateConfiguration {
         return properties;
     }
 
-    @Bean(name="transactionManager")
-    public PlatformTransactionManager transactionManager(){
-        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager(
+    @Bean(name = "transactionManager")
+    public PlatformTransactionManager transactionManager() {
+        return new JpaTransactionManager(
                 getEntityManagerFactoryBean().getObject());
-        return jpaTransactionManager;
     }
 }
 

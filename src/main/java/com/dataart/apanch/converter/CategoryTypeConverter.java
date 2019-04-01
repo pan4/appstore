@@ -10,7 +10,7 @@ public class CategoryTypeConverter implements Converter<String, CategoryType> {
     public CategoryType convert(String source) {
         try {
             return CategoryType.valueOf(source.toUpperCase());
-        } catch(Exception e) {
+        } catch(IllegalArgumentException e) {
             throw new RuntimeException(e);
         }
     }

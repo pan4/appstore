@@ -5,7 +5,7 @@ public enum CategoryType {
     GAMES("GAMES"),
     EDUCATION("EDUCATION");
 
-    String categoryType;
+    private final String categoryType;
 
     CategoryType(String categoryType){
         this.categoryType = categoryType;
