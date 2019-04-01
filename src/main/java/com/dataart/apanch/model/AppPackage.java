@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @Table(name = "APP_PACKAGE")
 public class AppPackage {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
@@ -35,13 +35,13 @@ public class AppPackage {
     private byte[] bigIcon;
 
     @NotEmpty
-    @Column(name="FILE_NAME", nullable=false)
+    @Column(name = "FILE_NAME", nullable = false)
     private String fileName;
 
-    @Column(name="SMALL_ICON_NAME")
+    @Column(name = "SMALL_ICON_NAME")
     private String smallIconName;
 
-    @Column(name="BIG_ICON_NAME")
+    @Column(name = "BIG_ICON_NAME")
     private String bigIconName;
 
     @OneToOne(mappedBy = "appPackage", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)

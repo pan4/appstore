@@ -6,12 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletOutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -45,11 +42,9 @@ public class AppPackageServiceImpl implements AppPackageService {
                     map.put(appPackage.getBigIconName(), appPackage.getBigIcon());
                 }
                 for (Map.Entry<String, byte[]> entry : map.entrySet()) {
-                    try(InputStream is = new ByteArrayInputStream(entry.getValue())) {
-                        ZipEntry zipEntry = new ZipEntry(entry.getKey());
-                        zipOut.putNextEntry(zipEntry);
-                        zipOut.write(entry.getValue());
-                    }
+                    ZipEntry zipEntry = new ZipEntry(entry.getKey());
+                    zipOut.putNextEntry(zipEntry);
+                    zipOut.write(entry.getValue());
                 }
             }
             appPackage.getApp().increaseDownloadsCount();

@@ -9,7 +9,7 @@ public enum FileElements {
 
     private final String title;
 
-    FileElements(String title){
+    FileElements(String title) {
         this.title = title;
     }
 

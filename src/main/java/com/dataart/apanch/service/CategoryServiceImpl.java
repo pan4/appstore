@@ -15,14 +15,14 @@ public class CategoryServiceImpl implements CategoryService {
     CategoryRepository categoryRepository;
 
     @Override
-    public List<Category> findAll(){
+    public List<Category> findAll() {
         List<Category> categories = new ArrayList();
         categoryRepository.findAll().forEach(categories::add);
         return categories;
     }
 
     @Override
-    public Category findById(Integer id){
+    public Category findById(Integer id) {
         return categoryRepository.findById(id).get();
     }
 

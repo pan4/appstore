@@ -13,10 +13,10 @@ import java.util.Base64;
 
 @Entity
 @Immutable
-@Table(name="DEFAULT_ICONS")
+@Table(name = "DEFAULT_ICONS")
 public class DefaultIcons {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
@@ -29,7 +29,7 @@ public class DefaultIcons {
     private byte[] bigIcon;
 
     public String getSmallIcon() {
-        if(smallIcon == null){
+        if (smallIcon == null) {
             return null;
         }
         byte[] encodeBase64 = Base64.getEncoder().encode(smallIcon);
@@ -37,7 +37,7 @@ public class DefaultIcons {
     }
 
     public String getBigIcon() {
-        if(bigIcon == null){
+        if (bigIcon == null) {
             return null;
         }
         byte[] encodeBase64 = Base64.getEncoder().encode(bigIcon);

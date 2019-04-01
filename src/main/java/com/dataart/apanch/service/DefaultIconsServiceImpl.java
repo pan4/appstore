@@ -11,8 +11,8 @@ public class DefaultIconsServiceImpl implements DefaultIconsService {
     DefaultIconsRepository defaultIconsRepository;
 
     @Override
-    public DefaultIcons get(){
-        if(defaultIconsRepository.findAll().iterator().hasNext()){
+    public DefaultIcons get() {
+        if (defaultIconsRepository.findAll().iterator().hasNext()) {
             return defaultIconsRepository.findAll().iterator().next();
         }
         return null;

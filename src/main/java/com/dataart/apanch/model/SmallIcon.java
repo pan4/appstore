@@ -13,7 +13,7 @@ import java.util.Base64;
 
 @Entity
 @Immutable
-@Table(name="SMALL_ICON_VIEW")
+@Table(name = "SMALL_ICON_VIEW")
 public class SmallIcon {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,7 +29,7 @@ public class SmallIcon {
     }
 
     public String getIcon() {
-        if(icon == null){
+        if (icon == null) {
             return null;
         }
         byte[] encodeBase64 = Base64.getEncoder().encode(icon);

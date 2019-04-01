@@ -16,25 +16,25 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name="APP")
+@Table(name = "APP")
 public class App {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
     @NotEmpty
-    @Column(name="NAME", nullable=false)
+    @Column(name = "NAME", nullable = false)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="CATEGORY_ID", nullable=false)
+    @JoinColumn(name = "CATEGORY_ID", nullable = false)
     private Category category;
 
-    @Column(name="DESCRIPTION")
+    @Column(name = "DESCRIPTION")
     private String description;
 
-    @Column(name="DOWNLOADS_COUNT", nullable=false)
+    @Column(name = "DOWNLOADS_COUNT", nullable = false)
     private Integer downloadsCount;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -49,7 +49,7 @@ public class App {
     @JoinColumn(name = "package_id", referencedColumnName = "id", insertable = false, updatable = false)
     private BigIcon bigIcon;
 
-    @Column(name="PACKAGE_NAME", nullable=false)
+    @Column(name = "PACKAGE_NAME", nullable = false)
     private String packageName;
 
     public Integer getId() {

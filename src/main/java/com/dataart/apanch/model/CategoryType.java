@@ -7,11 +7,11 @@ public enum CategoryType {
 
     private final String categoryType;
 
-    CategoryType(String categoryType){
+    CategoryType(String categoryType) {
         this.categoryType = categoryType;
     }
 
-    public String getCategoryType(){
+    public String getCategoryType() {
         return categoryType;
     }
 

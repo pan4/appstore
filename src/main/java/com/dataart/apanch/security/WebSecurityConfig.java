@@ -28,15 +28,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        http.authorizeRequests().anyRequest().hasAnyRole("DEVELOPER", "USER")
-        http.authorizeRequests().antMatchers("/login**","/", "/category-*","/app-*","/download/**").access("hasRole('USER') or hasRole('DEVELOPER')")
+        http.authorizeRequests().antMatchers("/login**", "/", "/category-*", "/app-*", "/download/**").access("hasRole('USER') or hasRole('DEVELOPER')")
                 .and().authorizeRequests().antMatchers("/new").access("hasRole('DEVELOPER')")
                 .and().formLogin().loginPage("/login").loginProcessingUrl("/loginAction").permitAll()
                 .and().logout().logoutSuccessUrl("/login").permitAll()
                 .and().csrf().disable().exceptionHandling().accessDeniedPage("/Access_Denied");
         http.headers().contentTypeOptions().disable();
     }
-
-
-
 }
