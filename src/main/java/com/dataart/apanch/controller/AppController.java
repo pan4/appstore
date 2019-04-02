@@ -114,14 +114,10 @@ public class AppController {
     }
 
     @RequestMapping(value = "/download/{fileName}", method = RequestMethod.GET)
-    public void downloadPackage(@PathVariable String fileName, @RequestParam("id") int id, HttpServletResponse response) {
-        try {
-            appPackageService.downloadPackage(id, response.getOutputStream());
-            response.setContentType("application/zip");
-            response.setHeader("Content-disposition", "attachment; filename=" + fileName);
-        } catch (IOException e) {
-            throw new RuntimeException("IOError writing file to output stream");
-        }
+    public void downloadPackage(@PathVariable String fileName, @RequestParam("id") int id, HttpServletResponse response) throws IOException {
+        appPackageService.downloadPackage(id, response.getOutputStream());
+        response.setContentType("application/zip");
+        response.setHeader("Content-disposition", "attachment; filename=" + fileName);
     }
 
     @RequestMapping(value = "/Access_Denied", method = RequestMethod.GET)

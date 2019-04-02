@@ -11,6 +11,7 @@ Also, the app allows the downloading of programs.
 - Maven 3
 - JDK 1.8
 - Tomcat 9.0.17
+- H2database
 
 ### Loging information:
 

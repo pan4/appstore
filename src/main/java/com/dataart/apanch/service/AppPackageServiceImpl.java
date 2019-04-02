@@ -28,29 +28,25 @@ public class AppPackageServiceImpl implements AppPackageService {
     }
 
     @Override
-    public void downloadPackage(Integer id, ServletOutputStream servletOutputStream) {
-        try {
-            AppPackage appPackage = findByAppId(id);
+    public void downloadPackage(Integer id, ServletOutputStream servletOutputStream) throws IOException {
+        AppPackage appPackage = findByAppId(id);
 
-            try (ZipOutputStream zipOut = new ZipOutputStream(servletOutputStream)) {
-                Map<String, byte[]> map = new HashMap<>();
-                map.put(appPackage.getFileName(), appPackage.getFile());
-                if (appPackage.getSmallIconName() != null) {
-                    map.put(appPackage.getSmallIconName(), appPackage.getSmallIcon());
-                }
-                if (appPackage.getBigIconName() != null) {
-                    map.put(appPackage.getBigIconName(), appPackage.getBigIcon());
-                }
-                for (Map.Entry<String, byte[]> entry : map.entrySet()) {
-                    ZipEntry zipEntry = new ZipEntry(entry.getKey());
-                    zipOut.putNextEntry(zipEntry);
-                    zipOut.write(entry.getValue());
-                }
+        try (ZipOutputStream zipOut = new ZipOutputStream(servletOutputStream)) {
+            Map<String, byte[]> map = new HashMap<>();
+            map.put(appPackage.getFileName(), appPackage.getFile());
+            if (appPackage.getSmallIconName() != null) {
+                map.put(appPackage.getSmallIconName(), appPackage.getSmallIcon());
             }
-            appPackage.getApp().increaseDownloadsCount();
-            save(appPackage);
-        } catch (IOException ex) {
-            throw new RuntimeException("IOError writing file to output stream");
+            if (appPackage.getBigIconName() != null) {
+                map.put(appPackage.getBigIconName(), appPackage.getBigIcon());
+            }
+            for (Map.Entry<String, byte[]> entry : map.entrySet()) {
+                ZipEntry zipEntry = new ZipEntry(entry.getKey());
+                zipOut.putNextEntry(zipEntry);
+                zipOut.write(entry.getValue());
+            }
         }
+        appPackage.getApp().increaseDownloadsCount();
+        save(appPackage);
     }
 }

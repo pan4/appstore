@@ -8,10 +8,6 @@ import org.springframework.stereotype.Component;
 public class CategoryTypeConverter implements Converter<String, CategoryType> {
     @Override
     public CategoryType convert(String source) {
-        try {
-            return CategoryType.valueOf(source.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException(e);
-        }
+        return CategoryType.valueOf(source.toUpperCase());
     }
 }
