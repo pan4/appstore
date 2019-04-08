@@ -2,6 +2,8 @@ package com.dataart.apanch.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,9 +18,9 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // TODO: use can use @Enumerated for such purposes instead of using String
+    @Enumerated(EnumType.STRING)
     @Column(name = "TYPE", length = 15, unique = true, nullable = false)
-    private String type = CategoryType.EDUCATION.getCategoryType();
+    private CategoryType type = CategoryType.EDUCATION;
 
     @OneToMany(mappedBy = "category")
     private Set<App> apps;
@@ -31,11 +33,11 @@ public class Category {
         this.id = id;
     }
 
-    public String getType() {
+    public CategoryType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(CategoryType type) {
         this.type = type;
     }
 

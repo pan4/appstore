@@ -5,18 +5,20 @@ import com.dataart.apanch.repository.DefaultIconsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class DefaultIconsServiceImpl implements DefaultIconsService {
     @Autowired
     DefaultIconsRepository defaultIconsRepository;
 
     @Override
-    public DefaultIcons get() {
-        // TODO: you call "findAll" twice? Why?
-        if (defaultIconsRepository.findAll().iterator().hasNext()) {
-            return defaultIconsRepository.findAll().iterator().next();
+    public Optional<DefaultIcons> get() {
+        List<DefaultIcons> all = defaultIconsRepository.findAll();
+        if (all.size() == 1) {
+            return Optional.of(all.get(0));
         }
-        // TODO: bad practice
-        return null;
+        return Optional.empty();
     }
 }

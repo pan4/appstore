@@ -5,8 +5,8 @@ import com.dataart.apanch.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -16,16 +16,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> findAll() {
-        // TODO: use JpaRepository instead of CRUD for using List
-        List<Category> categories = new ArrayList();
-        categoryRepository.findAll().forEach(categories::add);
-        return categories;
+        return categoryRepository.findAll();
     }
 
     @Override
-    // TODO: why don't just return Optional?
-    public Category findById(Integer id) {
-        return categoryRepository.findById(id).get();
+    public Optional<Category> findById(Integer id) {
+        return categoryRepository.findById(id);
     }
 
 }

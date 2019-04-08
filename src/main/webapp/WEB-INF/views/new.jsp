@@ -24,6 +24,6 @@
             <form:errors path="appPackage" class="help-inline"/>
         </div>
         <input type="submit" value="Save" />
-        <a href="home"> Cancel </a>
+        <a href="<c:url value="/home"/>"> Cancel </a>
     </form:form>
 </body>

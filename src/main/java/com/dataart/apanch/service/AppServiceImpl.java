@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -38,13 +39,12 @@ public class AppServiceImpl implements AppService {
 
     @Override
     public Page<App> findByCategoryType(CategoryType type, Pageable pageable) {
-        return appRepository.findByCategoryType(type.name(), pageable);
+        return appRepository.findByCategoryType(type, pageable);
     }
 
     @Override
-    // TODO: high risky code: make "get" without any checks. Better to return Option instead of checking for null
-    public App findById(Integer id) {
-        return appRepository.findById(id).get();
+    public Optional<App> findById(Integer id) {
+        return appRepository.findById(id);
     }
 
     @Override
@@ -55,27 +55,72 @@ public class AppServiceImpl implements AppService {
 
     @Override
     public boolean trySave(MultipartFile file, App app, BindingResult result) throws IOException {
-        AppPackage appPackage = parse(file, app, result);
+        Map<String, String> info = parseDescriptor(file);
+        validate(file, app, info, result);
         if (result.hasErrors()) {
             return false;
         }
+        String packageName = StringUtils.isEmpty(info.get(FileElements.PACKAGE_NAME.getTitle())) ?
+                app.getName() + ".zip" : info.get(FileElements.PACKAGE_NAME.getTitle());
+        app.setPackageName(packageName);
         app.setDownloadsCount(0);
+
+        AppPackage appPackage = buildAppPackage(file, info);
         app.setAppPackage(appPackage);
+
         appRepository.save(app);
         return true;
     }
 
     @Override
     public boolean isAppUnique(App app) {
-        // TODO: better to use Optional
-        App result = appRepository.findByNameAndCategoryType(app.getName(), app.getCategory().getType());
-        return result == null;
+        Optional<App> result = appRepository.findByNameAndCategoryType(app.getName(), app.getCategory().getType());
+        return !result.isPresent();
     }
 
+    private void validate(MultipartFile file, App app, Map<String, String> descriptorInfo, BindingResult result) {
+        if (file.getSize() == 0) {
+            FieldError error = new FieldError("app", "appPackage",
+                    messageSource.getMessage("NotEmpty.app.appPackage", null, Locale.getDefault()));
+            result.addError(error);
+        }
+        if (StringUtils.isEmpty(descriptorInfo.get(FileElements.APP_NAME.getTitle())) ||
+                !descriptorInfo.get(FileElements.APP_NAME.getTitle()).equals(app.getName())) {
+            result.addError(new FieldError("app", "name",
+                    messageSource.getMessage("NotEqual.app.name", null, Locale.getDefault())));
+        }
+        if (!isAppUnique(app)) {
+            String[] args = {app.getName(), app.getCategory().getType().name()};
+            FieldError ssoError = new FieldError("app", "name",
+                    messageSource.getMessage("Non.unique.app", args, Locale.getDefault()));
+            result.addError(ssoError);
+        }
+    }
 
-    // TODO: high level of complexity. Should be simplified according to SOLID principles
-    private AppPackage parse(MultipartFile file, App app, BindingResult result) throws IOException {
+    private static AppPackage buildAppPackage(MultipartFile file, Map<String, String> descriptorInfo) throws IOException {
         AppPackage appPackage = new AppPackage();
+
+        try (ZipInputStream zis = new ZipInputStream(file.getInputStream())) {
+            ZipEntry zipEntry = zis.getNextEntry();
+            while (zipEntry != null) {
+                byte[] buffer = streamToArray(zis);
+                if (zipEntry.getName().toLowerCase().endsWith(".txt")) {
+                    appPackage.setFile(buffer);
+                    appPackage.setFileName(zipEntry.getName());
+                } else if (zipEntry.getName().equals(descriptorInfo.get(FileElements.SMALL_ICON_NAME.getTitle()))) {
+                    appPackage.setSmallIcon(buffer);
+                    appPackage.setSmallIconName(zipEntry.getName());
+                } else if (zipEntry.getName().equals(descriptorInfo.get(FileElements.BIG_ICON_NAME.getTitle()))) {
+                    appPackage.setBigIcon(buffer);
+                    appPackage.setBigIconName(zipEntry.getName());
+                }
+                zipEntry = zis.getNextEntry();
+            }
+        }
+        return appPackage;
+    }
+
+    private static Map<String, String> parseDescriptor(MultipartFile file) throws IOException {
         Map<String, String> info = new HashMap<>();
         try (ZipInputStream zis = new ZipInputStream(file.getInputStream()); Scanner scanner = new Scanner(zis)) {
             ZipEntry zipEntry = zis.getNextEntry();
@@ -90,32 +135,7 @@ public class AppServiceImpl implements AppService {
                 zipEntry = zis.getNextEntry();
             }
         }
-        if (!info.get(FileElements.APP_NAME.getTitle()).equals(app.getName())) {
-            result.addError(new FieldError("app", "name", messageSource.getMessage("NotEqual.app.name", null, Locale.getDefault())));
-        }
-
-        String packageName = StringUtils.isEmpty(info.get(FileElements.PACKAGE_NAME.getTitle())) ? app.getName() + ".zip" : info.get(FileElements.PACKAGE_NAME.getTitle());
-        app.setPackageName(packageName);
-
-        try (ZipInputStream zis = new ZipInputStream(file.getInputStream())) {
-            ZipEntry zipEntry = zis.getNextEntry();
-            while (zipEntry != null) {
-                byte[] buffer = streamToArray(zis);
-                if (zipEntry.getName().toLowerCase().endsWith(".txt")) {
-                    appPackage.setFile(buffer);
-                    appPackage.setFileName(zipEntry.getName());
-                } else if (zipEntry.getName().equals(info.get(FileElements.SMALL_ICON_NAME.getTitle()))) {
-                    appPackage.setSmallIcon(buffer);
-                    appPackage.setSmallIconName(zipEntry.getName());
-                } else if (zipEntry.getName().equals(info.get(FileElements.BIG_ICON_NAME.getTitle()))) {
-                    appPackage.setBigIcon(buffer);
-                    appPackage.setBigIconName(zipEntry.getName());
-                }
-                zipEntry = zis.getNextEntry();
-            }
-        }
-
-        return appPackage;
+        return info;
     }
 
     private static byte[] streamToArray(InputStream strem) throws IOException {

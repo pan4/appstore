@@ -11,11 +11,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public interface AppService {
     Page<App> findByCategoryType(CategoryType type, Pageable pageable);
 
-    App findById(Integer id);
+    Optional<App> findById(Integer id);
 
     @Cacheable(value = CachingConfig.POPULAR)
     List<App> findPopular();

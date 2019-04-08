@@ -17,7 +17,7 @@
         </tr>
         <c:forEach var="category" items="${categories}">
             <tr>
-                <td><a href="category-${category.type.toLowerCase()}">${category.type}</a></td>
+                <td><a href=<c:url value="/category/${category.type.name().toLowerCase()}"/> >${category.type}</a></td>
             </tr>
         </c:forEach>
     </table>
@@ -41,7 +41,7 @@
                         </c:choose>
                     </td>
                     <td>
-                        <a href="app-${app.id}">${app.name}</a>
+                        <a href=<c:url value="/app/${app.id}"/>>${app.name}</a>
                         <p>Downloads: ${app.downloadsCount}</p>
                     </td>
                 </tr>
@@ -57,7 +57,7 @@
                             <td>${i}</td>
                         </c:when>
                         <c:otherwise>
-                            <td><a href="category-${categoryType}?page=${i}">${i}</a></td>
+                            <td><a href=<c:url value="/category/${categoryType}?page=${i}"/> >${i}</a></td>
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>

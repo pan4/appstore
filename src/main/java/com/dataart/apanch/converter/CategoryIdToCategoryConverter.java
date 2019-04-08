@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityNotFoundException;
+
 @Component
 public class CategoryIdToCategoryConverter implements Converter<Object, Category> {
 
@@ -18,7 +20,7 @@ public class CategoryIdToCategoryConverter implements Converter<Object, Category
 
     public Category convert(Object element) {
         Integer id = Integer.parseInt((String) element);
-        Category category = categoryService.findById(id);
+        Category category = categoryService.findById(id).orElseThrow(() -> new EntityNotFoundException());
         logger.info("Profile : {}", category);
         return category;
     }

@@ -24,5 +24,5 @@
         </td>
         <td>${app.description}</td>
     </tr>
-    <p><a href="download/${app.packageName}?id=${app.id}">Download</a></p>
+    <p><a href="<c:url value="/download/${app.packageName}?id=${app.id}"/>">Download</a></p>
 </body>
