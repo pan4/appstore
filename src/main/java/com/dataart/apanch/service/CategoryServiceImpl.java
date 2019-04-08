@@ -16,12 +16,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> findAll() {
+        // TODO: use JpaRepository instead of CRUD for using List
         List<Category> categories = new ArrayList();
         categoryRepository.findAll().forEach(categories::add);
         return categories;
     }
 
     @Override
+    // TODO: why don't just return Optional?
     public Category findById(Integer id) {
         return categoryRepository.findById(id).get();
     }

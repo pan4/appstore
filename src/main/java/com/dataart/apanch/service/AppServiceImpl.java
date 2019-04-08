@@ -42,6 +42,7 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
+    // TODO: high risky code: make "get" without any checks. Better to return Option instead of checking for null
     public App findById(Integer id) {
         return appRepository.findById(id).get();
     }
@@ -66,10 +67,13 @@ public class AppServiceImpl implements AppService {
 
     @Override
     public boolean isAppUnique(App app) {
+        // TODO: better to use Optional
         App result = appRepository.findByNameAndCategoryType(app.getName(), app.getCategory().getType());
         return result == null;
     }
 
+
+    // TODO: high level of complexity. Should be simplified according to SOLID principles
     private AppPackage parse(MultipartFile file, App app, BindingResult result) throws IOException {
         AppPackage appPackage = new AppPackage();
         Map<String, String> info = new HashMap<>();

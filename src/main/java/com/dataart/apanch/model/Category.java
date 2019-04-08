@@ -16,6 +16,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    // TODO: use can use @Enumerated for such purposes instead of using String
     @Column(name = "TYPE", length = 15, unique = true, nullable = false)
     private String type = CategoryType.EDUCATION.getCategoryType();
 

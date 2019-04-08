@@ -12,9 +12,11 @@ public class DefaultIconsServiceImpl implements DefaultIconsService {
 
     @Override
     public DefaultIcons get() {
+        // TODO: you call "findAll" twice? Why?
         if (defaultIconsRepository.findAll().iterator().hasNext()) {
             return defaultIconsRepository.findAll().iterator().next();
         }
+        // TODO: bad practice
         return null;
     }
 }

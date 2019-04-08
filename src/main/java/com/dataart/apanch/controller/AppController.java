@@ -52,6 +52,8 @@ public class AppController {
         return "redirect:/category-games";
     }
 
+    // TODO: not nice endpoint, better to use something like "/categories/{type}"
+    // TODO: please put each request param from new line for better readability
     @RequestMapping(value = {"/category-{type}"}, method = RequestMethod.GET)
     public String listCategories(@PathVariable CategoryType type, ModelMap model, @RequestParam(value = "orderBy", defaultValue = "downloadsCount") String orderBy,
                                  @RequestParam(value = "direction", defaultValue = "desc") String direction, @RequestParam(value = "page", defaultValue = "1") int page,
@@ -74,6 +76,7 @@ public class AppController {
         return "new";
     }
 
+    // TODO: a lot of "if" block here, should be simplified and implemented according to GoF patterns
     @RequestMapping(value = {"/new"}, method = RequestMethod.POST)
     public String saveApp(MultipartFile file, @Valid App app, BindingResult result, ModelMap model) throws IOException {
         if (result.hasErrors() || file.getSize() == 0) {
@@ -105,6 +108,7 @@ public class AppController {
         model.addAttribute("defaultIcons", defaultIconsService.get());
     }
 
+    // TODO: the same as about for categories` endpoint
     @RequestMapping(value = {"/app-{id}"}, method = RequestMethod.GET)
     public String getApp(@PathVariable int id, ModelMap model) {
         model.addAttribute("app", appService.findById(id));
@@ -120,12 +124,15 @@ public class AppController {
         response.setHeader("Content-disposition", "attachment; filename=" + fileName);
     }
 
+    // TODO: why this endpoint from capital letter?
     @RequestMapping(value = "/Access_Denied", method = RequestMethod.GET)
     public String accessDeniedPage(ModelMap model) {
         model.addAttribute("loggedinuser", getPrincipal());
         return "accessDenied";
     }
 
+    // TODO: why don't just use `SecurityContextHolder.getContext().getAuthentication().getName()`?
+    // Does it fit your goals?
     private static String getPrincipal() {
         String userName = null;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
