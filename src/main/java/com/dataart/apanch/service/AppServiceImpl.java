@@ -78,6 +78,7 @@ public class AppServiceImpl implements AppService {
         return !result.isPresent();
     }
 
+    // TODO: what will you do in case if you need to add 2 more validation rules? 2 more if block? in case of 10 more?? Should be refactored
     private void validate(MultipartFile file, App app, Map<String, String> descriptorInfo, BindingResult result) {
         if (file.getSize() == 0) {
             FieldError error = new FieldError("app", "appPackage",
@@ -120,6 +121,7 @@ public class AppServiceImpl implements AppService {
         return appPackage;
     }
 
+    // TODO: high level of complexity. Should be simplified
     private static Map<String, String> parseDescriptor(MultipartFile file) throws IOException {
         Map<String, String> info = new HashMap<>();
         try (ZipInputStream zis = new ZipInputStream(file.getInputStream()); Scanner scanner = new Scanner(zis)) {

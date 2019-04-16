@@ -15,6 +15,7 @@ public class DefaultIconsServiceImpl implements DefaultIconsService {
 
     @Override
     public Optional<DefaultIcons> get() {
+        // TODO: is it possible to use TOP or FIRST query https://stackoverflow.com/questions/38045439/technical-differences-between-spring-data-jpas-findfirst-and-findtop?
         List<DefaultIcons> all = defaultIconsRepository.findAll();
         if (all.size() == 1) {
             return Optional.of(all.get(0));

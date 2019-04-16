@@ -20,6 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // TODO: why not just get Optional from repo?
         User user = userDetailsRepository.findByUsername(username);
         UserBuilder builder = null;
         if (user != null) {
