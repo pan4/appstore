@@ -2,8 +2,10 @@ package com.dataart.apanch.service;
 
 import com.dataart.apanch.model.AppPackage;
 import com.dataart.apanch.repository.AppPackageRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletOutputStream;
 import java.io.IOException;
@@ -12,7 +14,9 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+@Slf4j
 @Service
+@Transactional
 public class AppPackageServiceImpl implements AppPackageService {
     @Autowired
     AppPackageRepository appPackageRepository;
@@ -24,7 +28,8 @@ public class AppPackageServiceImpl implements AppPackageService {
 
     @Override
     public AppPackage findByAppId(Integer id) {
-        return appPackageRepository.findByAppId(id);
+        return appPackageRepository.findByAppId(id).
+                orElseThrow(() -> new RuntimeException(String.format("App package for app with id = %d not found.", id)));
     }
 
     @Override
@@ -48,5 +53,6 @@ public class AppPackageServiceImpl implements AppPackageService {
         }
         appPackage.getApp().increaseDownloadsCount();
         save(appPackage);
+        log.info("App package with id = {} was downloaded", appPackage.getId());
     }
 }

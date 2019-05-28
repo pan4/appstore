@@ -1,11 +1,13 @@
 package com.dataart.apanch.controller;
 
+import com.dataart.apanch.dto.ValidatedFile;
 import com.dataart.apanch.model.App;
 import com.dataart.apanch.model.CategoryType;
 import com.dataart.apanch.service.AppPackageService;
 import com.dataart.apanch.service.AppService;
 import com.dataart.apanch.service.CategoryService;
 import com.dataart.apanch.service.DefaultIconsService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -15,17 +17,19 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Locale;
 
+@Slf4j
 @Controller
 @RequestMapping("/")
 public class AppController {
@@ -76,8 +80,13 @@ public class AppController {
     }
 
     @RequestMapping(value = {"/new"}, method = RequestMethod.POST)
-    public String saveApp(MultipartFile file, @Valid App app, BindingResult result, ModelMap model) throws IOException {
-        if (!appService.trySave(file, app, result)) {
+    public String saveApp(@Valid ValidatedFile file,
+                          BindingResult fileResult,
+                          @Valid App app,
+                          BindingResult appResult,
+                          ModelMap model) throws IOException {
+        mergeBindingResults(fileResult, appResult);
+        if (appResult.hasErrors() || !appService.trySave(file.getFile(), app, appResult)) {
             fillModel(model);
             return "new";
         }
@@ -112,6 +121,15 @@ public class AppController {
     public String accessDeniedPage(ModelMap model) {
         model.addAttribute("loggedinuser", getUserName());
         return "accessDenied";
+    }
+
+    private void mergeBindingResults(BindingResult fileBr, BindingResult aBr){
+        if(fileBr.hasErrors()){
+            FieldError error = new FieldError("app", "appPackage",
+                    messageSource.getMessage("NotEmpty.app.appPackage", null, Locale.getDefault()));
+            aBr.addError(error);
+            log.warn("App package can not be empty");
+        }
     }
 
     private static String getUserName() {

@@ -1,5 +1,8 @@
 package com.dataart.apanch.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -11,6 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "APP_CATEGORY")
 public class Category {
@@ -24,28 +29,4 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private Set<App> apps;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public CategoryType getType() {
-        return type;
-    }
-
-    public void setType(CategoryType type) {
-        this.type = type;
-    }
-
-    public Set<App> getApps() {
-        return apps;
-    }
-
-    public void setApps(Set<App> apps) {
-        this.apps = apps;
-    }
 }

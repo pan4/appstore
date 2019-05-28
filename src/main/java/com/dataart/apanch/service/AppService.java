@@ -18,10 +18,8 @@ public interface AppService {
 
     Optional<App> findById(Integer id);
 
-    @Cacheable(value = CachingConfig.POPULAR)
+    @Cacheable(CachingConfig.POPULAR)
     List<App> findPopular();
 
     boolean trySave(MultipartFile file, App app, BindingResult result) throws IOException;
-
-    boolean isAppUnique(App app);
 }

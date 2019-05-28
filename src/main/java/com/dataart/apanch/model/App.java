@@ -1,5 +1,7 @@
 package com.dataart.apanch.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.CascadeType;
@@ -17,6 +19,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "APP")
+@Getter
+@Setter
 public class App {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,71 +56,7 @@ public class App {
     @Column(name = "PACKAGE_NAME", nullable = false)
     private String packageName;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getDownloadsCount() {
-        return downloadsCount;
-    }
-
-    public void setDownloadsCount(Integer downloadsCount) {
-        this.downloadsCount = downloadsCount;
-    }
-
     public void increaseDownloadsCount() {
         downloadsCount++;
-    }
-
-    public AppPackage getAppPackage() {
-        return appPackage;
-    }
-
-    public void setAppPackage(AppPackage appPackage) {
-        this.appPackage = appPackage;
-    }
-
-    public SmallIcon getSmallIcon() {
-        return smallIcon;
-    }
-
-    public BigIcon getBigIcon() {
-        return bigIcon;
-    }
-
-    public String getPackageName() {
-        return packageName;
-    }
-
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
     }
 }

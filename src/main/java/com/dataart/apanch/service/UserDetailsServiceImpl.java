@@ -11,31 +11,28 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-@Service()
+@Service
+@Transactional
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     UserDetailsRepository userDetailsRepository;
 
-    @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // TODO: why not just get Optional from repo?
-        User user = userDetailsRepository.findByUsername(username);
-        UserBuilder builder = null;
-        if (user != null) {
-
-            builder = org.springframework.security.core.userdetails.User.withUsername(username);
-            builder.disabled(!user.isEnabled());
-            builder.password(user.getPassword());
-            String[] authorities = user.getAuthorities()
-                    .stream().map(a -> a.getAuthority()).toArray(String[]::new);
-
-            builder.authorities(authorities);
-        } else {
-            throw new UsernameNotFoundException("User not found.");
-        }
+        User user = findByUsername(username);
+        UserBuilder builder = org.springframework.security.core.userdetails.User.withUsername(username);
+        builder.disabled(!user.isEnabled());
+        builder.password(user.getPassword());
+        String[] authorities = user.getAuthorities()
+                .stream().map(a -> a.getAuthority()).toArray(String[]::new);
+        builder.authorities(authorities);
         return builder.build();
+    }
+
+    public User findByUsername(String username){
+        return userDetailsRepository.findByUsername(username).
+                orElseThrow(() -> new RuntimeException(String.format("User with username = %s not found.", username)));
     }
 }
 
